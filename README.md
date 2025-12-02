@@ -8,6 +8,22 @@ Base inicial para o aplicativo interno de reembolso, seguindo o PRD fornecido. E
 - [Backend](backend/README.md)
 - [Frontend](frontend/README.md)
 
+## Como rodar o backend
+1. Acesse a pasta `backend/` e instale dependências:
+   ```bash
+   cd backend
+   npm install
+   ```
+2. Configure variáveis de ambiente (ver `.env` ou use `DATABASE_URL`, `JWT_SECRET`, `FRONTEND_URL`).
+3. Aplique o schema do PostgreSQL:
+   ```bash
+   npm run migrate
+   ```
+4. Suba a API em modo desenvolvimento:
+   ```bash
+   npm run dev
+   ```
+
 ## Próximos passos imediatos
 1. Confirmar o modelo relacional definitivo e gerar migrations/ORM mantendo compatibilidade com as tabelas fornecidas.
 2. Inicializar projetos (Vite + React no `frontend/`; Node + TS no `backend/`) e configurar `.env.example`.

@@ -1,52 +1,60 @@
 # Backend (Node.js)
 
-## Stack sugerida
-- Node.js + TypeScript
-- Fastify ou Express
-- PostgreSQL via Prisma/Knex/TypeORM
-- JWT + bcrypt/argon2
-- Zod para validação, pino para logs, Swagger/OpenAPI para docs
+API de reembolso da Conatus Ambiental implementada com **Express** e **PostgreSQL**, alinhada ao PRD e schema SQL fornecidos.
 
-## Módulos principais
-- Auth (login, refresh, logout)
-- Users e Roles (RBAC)
-- Cost Centers/Projects (roteamento de aprovação)
-- Travels (criação, submissão, travas)
-- Expenses (inclui quilometragem e anexos)
-- Approvals (aprovar/reprovar/delegar)
-- Policies (caps por cargo/categoria, valor/km)
-- Exports (CSV/Excel/PDF)
-- Storage (interface + provider S3/GCS)
-- Audit Logs
+## Stack
+- Node.js + Express
+- PostgreSQL via `pg` (Pool) e migrations simples em `src/db/schema.sql`
+- JWT + bcrypt para autenticação
+- CORS liberado para o frontend (por padrão `http://localhost:3000`)
 
-## Estrutura sugerida
+## Estrutura de pastas
 ```
 src/
-  config/
-  db/
-    migrations/
-    seeds/
-    prisma|entities|models/
-  modules/
-    auth/
-    users/
-    travels/
-    expenses/
-    approvals/
-    policies/
-    cost-centers/
-    projects/
-    exports/
-    reports/
-    storage/
-  middlewares/
-  utils/
-  docs/
+  config/        # env e conexão com o banco
+  db/            # schema.sql e script de migration
+  controllers/   # entrada HTTP
+  services/      # regras de negócio e acesso ao banco
+  routes/        # rotas Express
+  middlewares/   # auth/RBAC
 ```
 
-## Próximos passos
-1. Gerar arquivo `.env.example` com variáveis (DATABASE_URL, JWT_SECRET, STORAGE_PROVIDER, etc.).
-2. Subir migrations iniciais (roles, users seed admin, categorias, políticas base).
-3. Implementar middlewares de auth e RBAC; travas de edição após submissão/aprovação.
-4. Criar endpoints de exportação e geração de PDF consolidado por viagem.
-5. Adicionar testes unitários/integrados para cálculo de km/caps e fluxo de aprovação.
+## Endpoints implementados
+- **Auth**: `POST /auth/login`, `GET /auth/me`
+- **Usuários (admin)**: `GET/POST/PUT/DELETE /users`
+- **Centros de custo**: `GET /cost-centers`, `POST /cost-centers`, `PUT /cost-centers/:id`
+- **Trips**: `POST /trips`, `GET /trips`, `POST /trips/:id/submit`
+- **Expenses**: `POST /trips/:tripId/expenses`, `GET /trips/:tripId/expenses`
+- **Approvals (approver)**: `POST /approvals/:id/approve`, `POST /approvals/:id/reject`
+
+## Regras de negócio cobertas
+- Travamento de edição: somente viagens com status `DRAFT/REJECTED` aceitam novas despesas ou submissão.
+- Envio para aprovação: troca status para `IN_APPROVAL` e registra log em `trip_approvals`.
+- Aprovação/Reprovação: troca status para `APPROVED` ou `REJECTED` e registra ação com justificativa em `trip_approvals`.
+- Quilometragem: se a categoria tiver `is_km_category = TRUE`, calcula `amount_original = km_quantity * rate_per_km` conforme `km_policies` do cargo do usuário, aplica cap (`max_km_per_trip` ou `max_amount_per_trip`) quando `exceed_behavior = 'CAP'`, marcando `km_capped = TRUE`.
+
+## Scripts
+- `npm run dev` – inicia servidor com nodemon.
+- `npm start` – inicia servidor.
+- `npm run migrate` – aplica o schema SQL em `src/db/schema.sql` (usa a conexão configurada).
+
+## Variáveis de ambiente
+Você pode usar `DATABASE_URL` ou definir credenciais individuais:
+```
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_NAME=conatus_reembolso
+JWT_SECRET=super-secret
+FRONTEND_URL=http://localhost:3000
+PORT=4000
+```
+
+## Como rodar
+```
+cd backend
+npm install
+npm run migrate   # aplica schema
+npm run dev       # sobe API em modo desenvolvimento
+```
