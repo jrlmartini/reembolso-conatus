@@ -3,7 +3,7 @@
 Base inicial para o aplicativo interno de reembolso, seguindo o PRD fornecido. Este repositório está organizado em duas pastas principais (`backend/` e `frontend/`) e documentação auxiliar em `docs/`.
 
 ## Documentação
-- [Arquitetura proposta](docs/architecture.md)
+- [Guia de arquitetura e esqueleto](docs/architecture.md)
 - [Entidades e relacionamentos](docs/data-model.md)
 - [Backend](backend/README.md)
 - [Frontend](frontend/README.md)
