@@ -23,6 +23,15 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500).json({ message: err.message || 'Erro interno' });
 });
 
-app.listen(config.port, () => {
+const server = app.listen(config.port, () => {
   console.log(`API ouvindo na porta ${config.port}`);
+});
+
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error(`Porta ${config.port} já está em uso. Defina PORT para outro valor (ex.: 4001) ou finalize o processo que est\xE1 ocupando a porta.`);
+  } else {
+    console.error('Erro ao iniciar o servidor:', err);
+  }
+  process.exit(1);
 });

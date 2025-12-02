@@ -37,6 +37,7 @@ src/
 - `npm run dev` – inicia servidor com nodemon.
 - `npm start` – inicia servidor.
 - `npm run migrate` – aplica o schema SQL em `src/db/schema.sql` (usa a conexão configurada).
+- `npm run db:up` – (requer Docker) sobe um PostgreSQL local via `docker-compose`.
 
 ### Contas seeds para login rápido
 O script de migrate cria usuários e papéis iniciais (senha padrão `admin123`, sobrescrevível com `SEED_PASSWORD`):
@@ -57,10 +58,18 @@ FRONTEND_URL=http://localhost:3000
 PORT=4000
 ```
 
+Para facilidade, copie `.env.example` para `.env` e ajuste conforme necessário:
+```
+cp .env.example .env
+```
+
+Se a porta 4000 estiver ocupada, defina `PORT=4001` (ou outra) ao rodar `npm run dev`.
+
 ## Como rodar
 ```
 cd backend
 npm install
+npm run db:up     # opcional: sobe PostgreSQL via Docker
 npm run migrate   # aplica schema
 npm run dev       # sobe API em modo desenvolvimento
 ```

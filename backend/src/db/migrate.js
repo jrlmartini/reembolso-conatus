@@ -6,7 +6,16 @@ const pool = require('../config/database');
 async function run() {
   const schemaPath = path.join(__dirname, 'schema.sql');
   const sql = fs.readFileSync(schemaPath, 'utf-8');
-  const client = await pool.connect();
+  let client;
+  try {
+    client = await pool.connect();
+  } catch (err) {
+    console.error(
+      'Não foi possível conectar ao PostgreSQL. Confira se o banco está rodando (ex.: `docker compose -f backend/docker-compose.yml up -d db`) e as variáveis DB_HOST/DB_PORT/DB_USER/DB_PASSWORD/DB_NAME ou DATABASE_URL.'
+    );
+    console.error(err);
+    process.exit(1);
+  }
   try {
     await client.query('BEGIN');
     await client.query(sql);
