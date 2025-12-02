@@ -220,7 +220,7 @@ async function ensureKmPolicy(client, positionId) {
   await client.query(
     `INSERT INTO km_policies(position_id, rate_per_km, max_km_per_trip, exceed_behavior, is_active)
      VALUES ($1, 2.5, 500, 'CAP', true)
-     ON CONFLICT (position_id) DO NOTHING`,
+     ON CONFLICT ON CONSTRAINT uq_km_policies_position_id DO NOTHING`,
     [positionId]
   );
 }
