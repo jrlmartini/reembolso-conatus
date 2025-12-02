@@ -4,6 +4,7 @@ const approvalController = require('../controllers/approvalController');
 const { authenticate, requireRole } = require('../middlewares/auth');
 
 router.use(authenticate, requireRole('approver'));
+router.get('/', approvalController.list);
 router.post('/:id/approve', approvalController.approve);
 router.post('/:id/reject', approvalController.reject);
 

@@ -1,47 +1,49 @@
-# Frontend (React)
+# Frontend (React + Vite)
 
-## Stack sugerida
-- React + TypeScript (Vite)
-- React Router para rotas públicas/protegidas
-- React Query para dados, Zustand/Redux Toolkit para estado global
-- Tailwind ou Chakra UI para componentes
-- Form validation com React Hook Form + Zod
+Interface web (SPA) do app de reembolsos da Conatus Ambiental, focada em mobile-first e integração com o backend Express (porta 4000).
 
-## Páginas e fluxos
-- Login
-- Lista de viagens (status: Em andamento, Em aprovação, Reprovado, Aprovado)
-- Detalhe da viagem (despesas, botão nova despesa, fechar relatório)
-- Formulário de despesa (fluxo foto → tipo → valor → salvar; inclui quilometragem)
-- Aprovação (fila do aprovador, detalhe do relatório com aprovar/reprovar/delegar)
-- Backoffice (desktop-first): Usuários, Projetos/CC, Categorias, Políticas, Relatórios, Auditoria
+## Stack
+- React 18
+- React Router v6
+- Axios para chamadas HTTP (baseURL configurada via `VITE_API_URL`, fallback `http://localhost:4000`)
+- Vite para build/dev server
 
-## Estrutura sugerida
+## Estrutura de pastas
 ```
-src/
-  app/ (providers, rotas, layout)
-  components/ (UI compartilhada)
-  features/
-    auth/
-    travel/
-    expenses/
-    approvals/
-    admin/
-  services/ (clients da API)
-  store/
-  hooks/
-  utils/
-  types/
+frontend/
+  src/
+    api/          # cliente HTTP
+    components/   # UI reutilizável (Layout, ExpenseForm)
+    context/      # AuthContext (token + usuário)
+    pages/        # Login, viagens, detalhe, aprovações
+    styles/       # CSS global
+  index.html
+  package.json
+  vite.config.js
 ```
 
-## Boas práticas de UX
-- Mobile-first; botões grandes e textos claros.
-- Fluxo rápido de despesa: capturar foto → selecionar tipo → inserir valor → salvar.
-- Mostrar indicadores de cap por política e status de aprovação.
-- Mensagens em PT-BR e feedbacks de erro/sucesso.
+## Rotas principais
+- `/login` — autenticação por e-mail/senha.
+- `/` — lista de viagens do usuário logado e formulário de nova viagem.
+- `/trips/:id` — detalhe da viagem, lista de despesas, criação de despesa e envio para aprovação.
+- `/approvals` — fila de aprovação para usuários com papel `approver` (aprovar/reprovar com justificativa).
 
-## Próximos passos
-1. Configurar Vite com Tailwind/Chakra e fontes.
-2. Implementar roteamento protegido por papel; guards para Admin/Aprovador.
-3. Integrar endpoints de viagens, despesas, aprovação e backoffice.
-4. Adicionar telas de exportação (CSV/Excel, PDF por viagem) e painéis de métricas.
-5. Preparar hooks e serviços para futuras extensões (OCR/sugestão de categoria).
+## Como rodar o frontend
+1. Entre na pasta `frontend/`.
+2. Instale dependências:
+   ```bash
+   npm install
+   ```
+3. Inicie o servidor de desenvolvimento (porta 3000):
+   ```bash
+   npm run dev
+   ```
+4. Configure `VITE_API_URL` em um `.env` (opcional) para apontar para o backend. Por padrão usa `http://localhost:4000`.
+
+## Integração com backend
+- Endpoints usados: `/auth/login`, `/auth/me`, `/trips`, `/trips/:id/submit`, `/trips/:tripId/expenses`, `/approvals`, `/approvals/:id/approve`, `/approvals/:id/reject`.
+- O token JWT é armazenado em `localStorage` e enviado no header `Authorization: Bearer <token>` via interceptor do Axios.
+
+## Notas de UX
+- Layout responsivo e minimalista, com ênfase em fluxo enxuto de despesa (foto → tipo/CC → valor → salvar).
+- Telas de aprovação exibem informações essenciais e ações rápidas de aprovar/reprovar com justificativa.

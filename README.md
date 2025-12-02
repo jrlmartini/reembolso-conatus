@@ -24,8 +24,20 @@ Base inicial para o aplicativo interno de reembolso, seguindo o PRD fornecido. E
    npm run dev
    ```
 
+## Como rodar o frontend
+1. Acesse a pasta `frontend/` e instale dependências:
+   ```bash
+   cd frontend
+   npm install
+   ```
+2. (Opcional) Crie um arquivo `.env` com `VITE_API_URL=http://localhost:4000` se quiser customizar a URL do backend.
+3. Rode o projeto em modo desenvolvimento (porta 3000):
+   ```bash
+   npm run dev
+   ```
+4. Abra no navegador `http://localhost:3000`.
+
 ## Próximos passos imediatos
 1. Confirmar o modelo relacional definitivo e gerar migrations/ORM mantendo compatibilidade com as tabelas fornecidas.
-2. Inicializar projetos (Vite + React no `frontend/`; Node + TS no `backend/`) e configurar `.env.example`.
-3. Implementar autenticação JWT com RBAC, fluxos de viagem/despesa/quilometragem e pipeline de aprovação conforme PRD.
-4. Preparar endpoints e telas de exportação (CSV/Excel, PDF) e painéis de métricas.
+2. Completar integrações de backoffice (usuários, categorias, políticas) e UX mobile-first para lançamento de despesas.
+3. Preparar endpoints e telas de exportação (CSV/Excel, PDF) e painéis de métricas.

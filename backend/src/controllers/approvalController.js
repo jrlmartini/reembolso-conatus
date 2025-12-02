@@ -1,5 +1,14 @@
 const approvalService = require('../services/approvalService');
 
+async function list(req, res) {
+  try {
+    const trips = await approvalService.listPendingTripsForApprover(req.user.id);
+    res.json(trips);
+  } catch (err) {
+    res.status(err.status || 500).json({ message: err.message || 'Erro ao listar viagens em aprovação' });
+  }
+}
+
 async function approve(req, res) {
   try {
     await approvalService.approveTrip(req.params.id, req.user.id);
@@ -18,4 +27,4 @@ async function reject(req, res) {
   }
 }
 
-module.exports = { approve, reject };
+module.exports = { list, approve, reject };

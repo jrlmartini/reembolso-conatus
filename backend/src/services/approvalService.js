@@ -1,5 +1,18 @@
 const pool = require('../config/database');
 
+async function listPendingTripsForApprover(approverId) {
+  const { rows } = await pool.query(
+    `SELECT t.*, u.full_name AS user_name, cc.name AS cost_center_name
+     FROM trips t
+     JOIN users u ON u.id = t.user_id
+     JOIN cost_centers cc ON cc.id = t.cost_center_id
+     WHERE t.status = 'IN_APPROVAL' AND cc.approver_user_id = $1
+     ORDER BY t.submitted_at DESC NULLS LAST, t.created_at DESC`,
+    [approverId]
+  );
+  return rows;
+}
+
 async function approveTrip(tripId, approverId) {
   const client = await pool.connect();
   try {
@@ -61,4 +74,4 @@ async function rejectTrip(tripId, approverId, comment) {
   }
 }
 
-module.exports = { approveTrip, rejectTrip };
+module.exports = { approveTrip, rejectTrip, listPendingTripsForApprover };
