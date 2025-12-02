@@ -8,6 +8,7 @@ async function run() {
   const sql = fs.readFileSync(schemaPath, 'utf-8');
   let client;
   try {
+    await waitForDatabase();
     client = await pool.connect();
   } catch (err) {
     console.error(
@@ -29,6 +30,25 @@ async function run() {
   } finally {
     client.release();
     await pool.end();
+  }
+}
+
+async function waitForDatabase(retries = 10, delayMs = 1000) {
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      const testClient = await pool.connect();
+      testClient.release();
+      return;
+    } catch (err) {
+      const isLastAttempt = attempt === retries;
+      console.warn(
+        `Tentativa ${attempt}/${retries} de conectar ao PostgreSQL falhou (${err.code || err.message}).${
+          isLastAttempt ? '' : ` Nova tentativa em ${delayMs}ms...`
+        }`
+      );
+      if (isLastAttempt) throw err;
+      await new Promise((resolve) => setTimeout(resolve, delayMs));
+    }
   }
 }
 

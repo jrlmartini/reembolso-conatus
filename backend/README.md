@@ -36,8 +36,9 @@ src/
 ## Scripts
 - `npm run dev` – inicia servidor com nodemon.
 - `npm start` – inicia servidor.
-- `npm run migrate` – aplica o schema SQL em `src/db/schema.sql` (usa a conexão configurada).
+- `npm run migrate` – aplica o schema SQL em `src/db/schema.sql` (usa a conexão configurada e aguarda o banco ficar disponível com algumas tentativas).
 - `npm run db:up` – (requer Docker) sobe um PostgreSQL local via `docker-compose`.
+- `npm run db:up-and-migrate` – sobe o Postgres via Docker e aplica o schema/seeds em seguida.
 
 ### Contas seeds para login rápido
 O script de migrate cria usuários e papéis iniciais (senha padrão `admin123`, sobrescrevível com `SEED_PASSWORD`):
@@ -69,7 +70,18 @@ Se a porta 4000 estiver ocupada, defina `PORT=4001` (ou outra) ao rodar `npm run
 ```
 cd backend
 npm install
-npm run db:up     # opcional: sobe PostgreSQL via Docker
-npm run migrate   # aplica schema
-npm run dev       # sobe API em modo desenvolvimento
+
+# opção 1: usar Docker local (recomendado)
+npm run db:up-and-migrate   # sobe Postgres e aplica schema/seeds
+
+# opção 2: Postgres já rodando na sua máquina
+# exporte DB_HOST/DB_PORT/DB_USER/DB_PASSWORD/DB_NAME ou DATABASE_URL
+npm run migrate             # aplica schema/seeds (o script tenta conectar algumas vezes antes de falhar)
+
+# subir API (defina PORT=4001 se 4000 estiver em uso)
+npm run dev
 ```
+
+### Dicas de troubleshooting
+- **Banco não conecta / ECONNREFUSED**: verifique se o Postgres está rodando (`docker ps -a`, `npm run db:up`), confirme `DB_HOST` (use `127.0.0.1` em vez de `localhost` se preferir) e `DB_PORT`.
+- **Porta 4000 em uso**: rode `PORT=4001 npm run dev` ou finalize o processo que está escutando em 4000.

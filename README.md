@@ -15,20 +15,18 @@ Base inicial para o aplicativo interno de reembolso, seguindo o PRD fornecido. E
    npm install
    ```
 2. Configure variáveis de ambiente (copie `.env.example` para `.env` ou use `DATABASE_URL`, `JWT_SECRET`, `FRONTEND_URL`).
-3. Suba o PostgreSQL local (requer Docker) **antes** de migrar:
+3. Suba o PostgreSQL local (requer Docker) **antes** de migrar (ou use um banco já disponível):
    ```bash
-   npm run db:up
+   npm run db:up-and-migrate   # sobe Postgres via Docker e já aplica schema/seeds
+   # ou, se você já tem Postgres rodando, ajuste as variáveis DB_* e rode apenas:
+   # npm run migrate
    ```
    > Se já tiver um Postgres rodando em outra porta/host, ajuste `DB_HOST/DB_PORT/DB_USER/DB_PASSWORD/DB_NAME` ou `DATABASE_URL`.
-4. Aplique o schema do PostgreSQL e seeds de usuários:
-   ```bash
-   npm run migrate
-   ```
-5. Suba a API em modo desenvolvimento (defina `PORT` se 4000 estiver ocupado):
+4. Suba a API em modo desenvolvimento (defina `PORT` se 4000 estiver ocupado):
    ```bash
    npm run dev
    ```
-6. Login rápido (gerado pelo migrate, senha padrão `admin123`, alterável via `SEED_PASSWORD`):
+5. Login rápido (gerado pelo migrate, senha padrão `admin123`, alterável via `SEED_PASSWORD`):
    - Admin: `admin@conatus.com`
    - Aprovador: `approver@conatus.com`
    - Usuário: `user@conatus.com`
