@@ -40,6 +40,11 @@ frontend/
    ```
 4. Configure `VITE_API_URL` em um `.env` (opcional) para apontar para o backend. Por padrão usa `http://localhost:4000`.
 
+### Contas de teste (geradas pelo `npm run migrate` do backend)
+- Admin: `admin@conatus.com` / senha `admin123`
+- Aprovador: `approver@conatus.com` / senha `admin123`
+- Usuário: `user@conatus.com` / senha `admin123`
+
 ## Integração com backend
 - Endpoints usados: `/auth/login`, `/auth/me`, `/trips`, `/trips/:id/submit`, `/trips/:tripId/expenses`, `/approvals`, `/approvals/:id/approve`, `/approvals/:id/reject`.
 - O token JWT é armazenado em `localStorage` e enviado no header `Authorization: Bearer <token>` via interceptor do Axios.

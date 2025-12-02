@@ -23,6 +23,10 @@ Base inicial para o aplicativo interno de reembolso, seguindo o PRD fornecido. E
    ```bash
    npm run dev
    ```
+5. Login rápido (gerado pelo migrate, senha padrão `admin123`, alterável via `SEED_PASSWORD`):
+   - Admin: `admin@conatus.com`
+   - Aprovador: `approver@conatus.com`
+   - Usuário: `user@conatus.com`
 
 ## Como rodar o frontend
 1. Acesse a pasta `frontend/` e instale dependências:

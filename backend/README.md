@@ -38,6 +38,12 @@ src/
 - `npm start` – inicia servidor.
 - `npm run migrate` – aplica o schema SQL em `src/db/schema.sql` (usa a conexão configurada).
 
+### Contas seeds para login rápido
+O script de migrate cria usuários e papéis iniciais (senha padrão `admin123`, sobrescrevível com `SEED_PASSWORD`):
+- Admin: `admin@conatus.com` (roles: admin, approver, user)
+- Aprovador: `approver@conatus.com` (role: approver)
+- Usuário: `user@conatus.com` (role: user)
+
 ## Variáveis de ambiente
 Você pode usar `DATABASE_URL` ou definir credenciais individuais:
 ```
